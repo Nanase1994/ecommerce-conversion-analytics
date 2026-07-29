@@ -9,6 +9,8 @@ An end-to-end analytics portfolio project that transforms 3.6 million GA4
 e-commerce events into a conversion-funnel diagnosis, leakage-safe machine
 learning system, model-monitoring dashboard, and experiment recommendation.
 
+**Start here:** [Ecommerce_Conversion_Analytics_Integrated.ipynb](Ecommerce_Conversion_Analytics_Integrated.ipynb)
+
 > **Portfolio highlight:** The highest-scored 10% of future sessions contains
 > 20.1% of purchases, producing **2.01× lift** without using browsing,
 > checkout, revenue, or other post-session information.
@@ -96,7 +98,7 @@ flowchart LR
 ├── dashboard/      # Validated dashboard manifest and snapshot
 ├── data/           # Data access and schema instructions; raw data excluded
 ├── docs/           # Model card, data dictionary, and resume bullets
-├── notebooks/      # Reproducible analysis notebook
+├── Ecommerce_Conversion_Analytics_Integrated.ipynb
 ├── sql/            # BigQuery sessionization, BQML, scoring, monitoring
 ├── src/            # NumPy/pandas training pipeline
 └── tests/          # Artifact and leakage-contract checks

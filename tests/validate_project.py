@@ -10,7 +10,7 @@ dashboard = json.loads(
     (ROOT / "dashboard" / "dashboard_source.json").read_text(encoding="utf-8")
 )
 notebook = json.loads(
-    (ROOT / "notebooks" / "purchase_propensity_model.ipynb").read_text(
+    (ROOT / "Ecommerce_Conversion_Analytics_Integrated.ipynb").read_text(
         encoding="utf-8"
     )
 )
@@ -30,5 +30,6 @@ assert "revenue" in prohibited
 assert dashboard["snapshot"]["status"] == "ready"
 assert len(dashboard["snapshot"]["datasets"]) == 8
 assert notebook["nbformat"] == 4
+assert len(notebook["cells"]) == 34
 
 print("Portfolio validation passed.")
