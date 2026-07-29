@@ -14,7 +14,9 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Compile training pipeline
-        run: python -m py_compile src/train_model.py
-      - name: Validate JSON artifacts and leakage contract
-        run: python tests/validate_project.py
+      - name: Execute integrated analysis notebook
+        run: jupyter nbconvert --execute --to notebook --inplace --ExecutePreprocessor.timeout=600 Ecommerce_Conversion_Analytics_Integrated.ipynb
+      - name: Execute training notebook
+        run: jupyter nbconvert --execute --to notebook --inplace --ExecutePreprocessor.timeout=600 src/train_model.ipynb
+      - name: Execute validation notebook
+        run: jupyter nbconvert --execute --to notebook --inplace --ExecutePreprocessor.timeout=600 tests/validate_project.ipynb
