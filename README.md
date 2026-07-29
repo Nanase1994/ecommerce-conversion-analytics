@@ -5,26 +5,19 @@
 [![Machine Learning](https://img.shields.io/badge/ML-Propensity_Modeling-B4872B)](#machine-learning-results)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-An end-to-end analytics portfolio project that transforms 3.6 million GA4
-e-commerce events into a conversion-funnel diagnosis, leakage-safe machine
-learning system, model-monitoring dashboard, and experiment recommendation.
+An end-to-end analytics portfolio project that transforms 3.6 million GA4 e-commerce events into a conversion-funnel diagnosis, leakage-safe machine-learning system, model evaluation, and experiment recommendation.
+
+## Run the complete project
 
 **Start here:** [Ecommerce_Conversion_Analytics_Integrated.ipynb](Ecommerce_Conversion_Analytics_Integrated.ipynb)
 
-> **Portfolio highlight:** The highest-scored 10% of future sessions contains
-> 20.1% of purchases, producing **2.01× lift** without using browsing,
-> checkout, revenue, or other post-session information.
+The integrated notebook is fully self-contained. Its reviewed session-level modeling dataset is gzip-compressed and embedded directly in the notebook. Open the file in Jupyter or Google Colab and choose **Run All**. No repository CSV, JSON artifact, pre-generated image, SQL script, or local Python module is required.
+
+> **Portfolio highlight:** The highest-scored 10% of future sessions contains 20.1% of purchases, producing **2.01x lift** without using browsing, checkout, revenue, or other post-session information.
 
 ![Model validation](assets/model-validation.svg)
 
-## Business question
-
-1. Where does the e-commerce funnel lose the most sessions?
-2. Can information available at session start rank sessions by purchase
-   propensity?
-3. How should the score be used without confusing prediction with causation?
-
-## Key business findings
+## Business results
 
 | KPI | Result |
 |---|---:|
@@ -37,43 +30,28 @@ learning system, model-monitoring dashboard, and experiment recommendation.
 
 ![Conversion funnel](assets/funnel.svg)
 
-- The largest loss is **Visit → Product View**, where 244,621 sessions leave.
-- The second-largest loss is **Product View → Add to Cart**, where 50,206
-  sessions leave.
-- Payment → Purchase converts at 72.29%, so discovery and product-detail
-  experiments should be prioritized ahead of a checkout-first redesign.
+- Visit to Product View loses 244,621 sessions, the largest absolute funnel leak.
+- Product View to Add to Cart loses another 50,206 sessions.
+- Payment to Purchase retains 72.29%, supporting discovery and product-detail experimentation before a checkout-first redesign.
 
 ## Machine-learning results
 
-The dataset is split chronologically to approximate real deployment:
+The evaluation uses a chronological split to approximate deployment on future sessions:
 
-- **Training:** Nov 16, 2020–Jan 10, 2021 — 228,487 sessions.
-- **Test:** Jan 11–31, 2021 — 81,527 future sessions.
-- **Positive class:** 912 purchases in the holdout (1.12%).
+- **Training:** November 16, 2020 through January 10, 2021; 228,487 sessions.
+- **Test:** January 11 through January 31, 2021; 81,527 sessions.
+- **Positive class:** 912 purchases in the holdout, or 1.12%.
 
 | Model | PR-AUC | ROC-AUC | Log loss | Brier | Top-10% recall | Lift |
 |---|---:|---:|---:|---:|---:|---:|
-| **Hashed logistic regression** | **0.0171** | 0.5868 | **0.0609** | **0.01105** | 20.1% | 2.01× |
-| Categorical Naive Bayes | 0.0168 | **0.5947** | 0.0631 | 0.01138 | **20.3%** | **2.03×** |
+| **Hashed logistic regression** | **0.0171** | 0.5868 | **0.0609** | **0.01105** | 20.1% | 2.01x |
+| Categorical Naive Bayes | 0.0168 | **0.5947** | 0.0631 | 0.01138 | **20.3%** | **2.03x** |
 
-Logistic regression is selected using PR-AUC, the primary rare-event metric,
-and has better probability quality. Performance is intentionally described as
-modest: session-start context provides useful ranking signal, but it is not
-strong enough for autonomous customer treatment.
+Logistic regression is selected using PR-AUC, the primary rare-event metric, and provides better probability quality. Performance is intentionally described as modest: session-start context offers useful ranking signal but is not sufficient for autonomous customer treatment.
 
 ## Leakage-safe design
 
-The deployable model uses only:
-
-- Traffic source and medium
-- Device category and operating system
-- Country
-- Day of week and weekend status
-
-It explicitly excludes page views, product views, cart, checkout, payment,
-purchase, transactions, revenue, engagement, total events, and full-session
-duration. These variables happen after scoring time or directly reveal the
-outcome.
+The deployable feature contract includes only traffic source, traffic medium, device category, operating system, country, day of week, and weekend status. It excludes page views, product interactions, cart, checkout, payment, purchase, transactions, revenue, engagement, event counts, and session duration.
 
 ```mermaid
 flowchart LR
@@ -81,69 +59,36 @@ flowchart LR
     B --> C["Data-quality checks"]
     C --> D["Score-time feature contract"]
     D --> E["Chronological split"]
-    E --> F["Logistic regression"]
-    E --> G["Naive Bayes"]
+    E --> F["Hashed logistic regression"]
+    E --> G["Categorical Naive Bayes"]
     F --> H["PR-AUC, lift, calibration"]
     G --> H
-    H --> I["Dashboard"]
-    I --> J["Randomized product experiment"]
+    H --> I["Randomized product experiment"]
 ```
 
 ## Repository structure
 
 ```text
 .
-├── artifacts/      # Reviewed metrics, lift, and calibration outputs
-├── assets/         # Portfolio-ready SVG figures
-├── dashboard/      # Validated dashboard manifest and snapshot
-├── data/           # Data access and schema instructions; raw data excluded
-├── docs/           # Model card, data dictionary, and resume bullets
-├── Ecommerce_Conversion_Analytics_Integrated.ipynb
-├── sql/            # BigQuery sessionization, BQML, scoring, monitoring
-├── src/            # NumPy/pandas training pipeline
-└── tests/          # Artifact and leakage-contract checks
+|-- Ecommerce_Conversion_Analytics_Integrated.ipynb  # Complete one-click project
+|-- artifacts/      # Reviewed metrics, lift, and calibration outputs
+|-- assets/         # Portfolio-ready SVG figures
+|-- dashboard/      # Dashboard manifest and source snapshot
+|-- data/           # Source schema and reconstruction instructions
+|-- docs/           # Model card, data dictionary, and resume bullets
+|-- sql/            # BigQuery sessionization, BQML, scoring, monitoring
+|-- src/            # Standalone NumPy and pandas training pipeline
+`-- tests/          # Artifact and notebook contract checks
 ```
-
-## Reproduce locally
-
-```bash
-python -m venv .venv
-# Windows: .venv\Scripts\activate
-# macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt
-
-python src/train_model.py \
-  --input data/session_level_ecommerce.csv \
-  --output artifacts
-```
-
-The raw 52 MB session export is intentionally excluded from GitHub. See
-[data/README.md](data/README.md) for the expected schema and BigQuery
-reconstruction path.
-
-## Dashboard and model governance
-
-The dashboard combines funnel KPIs with PR-AUC, ROC-AUC, top-decile recall,
-lift, model comparison, calibration, and deployment controls. The model card
-documents intended use, prohibited uses, drift risks, and the experiment-only
-deployment gate.
 
 ## Recommended product action
 
-Use propensity scores to stratify eligible sessions inside a randomized
-experiment. Measure incremental conversion or revenue per eligible session and
-monitor experience-quality guardrails. Propensity lift identifies where
-conversion is concentrated; it does **not** prove that an intervention causes
-conversion.
+Use propensity scores to stratify eligible sessions inside a randomized experiment. Measure incremental conversion or revenue per eligible session and monitor latency, bounce rate, refunds, and experience-quality guardrails. Predictive lift identifies where conversion is concentrated; it does **not** prove that an intervention causes conversion.
 
 ## Skills demonstrated
 
-`Python` · `NumPy` · `pandas` · `BigQuery SQL` · `BigQuery ML` · `GA4` ·
-`feature engineering` · `classification` · `rare-event metrics` ·
-`chronological validation` · `data leakage prevention` · `calibration` ·
-`dashboard design` · `product experimentation`
+`Python` · `NumPy` · `pandas` · `Matplotlib` · `BigQuery SQL` · `BigQuery ML` · `GA4` · `feature engineering` · `classification` · `rare-event metrics` · `chronological validation` · `data leakage prevention` · `calibration` · `dashboard design` · `product experimentation`
 
 ## License
 
-MIT License. The underlying GA4 public sample remains subject to its source
-terms.
+MIT License. The underlying GA4 public sample remains subject to its source terms.
