@@ -30,6 +30,12 @@ assert "revenue" in prohibited
 assert dashboard["snapshot"]["status"] == "ready"
 assert len(dashboard["snapshot"]["datasets"]) == 8
 assert notebook["nbformat"] == 4
-assert len(notebook["cells"]) == 34
+assert len(notebook["cells"]) == 25
+
+notebook_text = json.dumps(notebook, ensure_ascii=False)
+assert "EMBEDDED_SESSION_DATA_GZIP_BASE64" in notebook_text
+assert "session_level_ecommerce.csv" not in notebook_text
+assert "read_csv(io.BytesIO(session_data)" in notebook_text
+assert "All reproducibility checks passed" in notebook_text
 
 print("Portfolio validation passed.")
