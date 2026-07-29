@@ -1,0 +1,611 @@
+{
+  "surface": "dashboard",
+  "manifest": {
+    "version": 1,
+    "surface": "dashboard",
+    "title": "GA4 E-commerce Funnel & Purchase Propensity Dashboard",
+    "description": "Source-backed funnel performance and leakage-safe chronological model validation.",
+    "generatedAt": "2026-07-29",
+    "sources": [
+      {
+        "id": "session_export",
+        "label": "GA4 session-level e-commerce export",
+        "path": "data/session_level_ecommerce.csv",
+        "query": {
+          "engine": "Python",
+          "language": "Python",
+          "description": "Session-level funnel metrics and chronological purchase-propensity validation.",
+          "sql": "SELECT COUNT(*) AS sessions, AVG(converted) AS conversion_rate, SUM(revenue) AS revenue FROM read_csv_auto('session_level_ecommerce.csv');",
+          "tables_used": [
+            "session_level_ecommerce.csv"
+          ],
+          "filters": [
+            "Analysis window 2020-11-16 through 2021-01-31",
+            "Training through 2021-01-10; test from 2021-01-11",
+            "Post-session and behavioral outcome fields excluded from the model"
+          ],
+          "metric_definitions": [
+            "Conversion rate = converted sessions / all sessions",
+            "PR-AUC = average precision on chronological test sessions",
+            "Top-decile lift = conversion rate in highest-score 10% / test conversion rate"
+          ]
+        }
+      }
+    ],
+    "cards": [
+      {
+        "id": "sessions",
+        "dataset": "kpis",
+        "sourceId": "session_export",
+        "description": "Distinct reconstructed sessions.",
+        "metrics": [
+          {
+            "label": "Sessions",
+            "field": "sessions",
+            "format": "compact"
+          }
+        ]
+      },
+      {
+        "id": "conversion",
+        "dataset": "kpis",
+        "sourceId": "session_export",
+        "description": "Purchase sessions divided by all sessions.",
+        "metrics": [
+          {
+            "label": "Conversion rate",
+            "field": "conversion_rate",
+            "format": "percent"
+          }
+        ]
+      },
+      {
+        "id": "revenue",
+        "dataset": "kpis",
+        "sourceId": "session_export",
+        "description": "Recorded transaction revenue.",
+        "metrics": [
+          {
+            "label": "Recorded revenue",
+            "field": "revenue",
+            "format": "currency"
+          }
+        ]
+      },
+      {
+        "id": "pr_auc",
+        "dataset": "model_kpis",
+        "sourceId": "session_export",
+        "description": "Average precision on the chronological holdout.",
+        "metrics": [
+          {
+            "label": "Test PR-AUC",
+            "field": "pr_auc"
+          }
+        ]
+      },
+      {
+        "id": "roc_auc",
+        "dataset": "model_kpis",
+        "sourceId": "session_export",
+        "description": "Ranking discrimination on future sessions.",
+        "metrics": [
+          {
+            "label": "Test ROC-AUC",
+            "field": "roc_auc"
+          }
+        ]
+      },
+      {
+        "id": "lift",
+        "dataset": "model_kpis",
+        "sourceId": "session_export",
+        "description": "Conversion concentration in the highest-score decile.",
+        "metrics": [
+          {
+            "label": "Top-decile lift",
+            "field": "top_decile_lift"
+          }
+        ]
+      },
+      {
+        "id": "recall",
+        "dataset": "model_kpis",
+        "sourceId": "session_export",
+        "description": "Share of purchases captured in the highest-score 10%.",
+        "metrics": [
+          {
+            "label": "Top-10% recall",
+            "field": "top_10_recall",
+            "format": "percent"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "funnel_volume",
+        "title": "Session Volume by Funnel Stage",
+        "dataset": "funnel",
+        "type": "bar",
+        "encodings": {
+          "x": {
+            "field": "stage",
+            "type": "categorical"
+          },
+          "y": {
+            "field": "sessions",
+            "type": "quantitative"
+          }
+        },
+        "options": {
+          "orientation": "horizontal"
+        },
+        "sourceId": "session_export"
+      },
+      {
+        "id": "stage_conversion",
+        "title": "Sequential Funnel Conversion",
+        "dataset": "funnel_transitions",
+        "type": "bar",
+        "encodings": {
+          "x": {
+            "field": "transition",
+            "type": "categorical"
+          },
+          "y": {
+            "field": "conversion_rate",
+            "type": "quantitative"
+          }
+        },
+        "options": {
+          "orientation": "horizontal"
+        },
+        "sourceId": "session_export"
+      },
+      {
+        "id": "model_comparison",
+        "title": "Chronological Model Performance",
+        "dataset": "model_comparison",
+        "type": "bar",
+        "encodings": {
+          "x": {
+            "field": "metric",
+            "type": "categorical"
+          },
+          "y": {
+            "field": "value",
+            "type": "quantitative"
+          },
+          "color": {
+            "field": "model",
+            "type": "categorical"
+          }
+        },
+        "options": {
+          "orientation": "vertical",
+          "grouping": "grouped"
+        },
+        "sourceId": "session_export"
+      },
+      {
+        "id": "lift_deciles",
+        "title": "Lift by Score Decile",
+        "dataset": "lift_deciles",
+        "type": "bar",
+        "encodings": {
+          "x": {
+            "field": "decile",
+            "type": "categorical"
+          },
+          "y": {
+            "field": "lift",
+            "type": "quantitative"
+          }
+        },
+        "options": {
+          "orientation": "vertical"
+        },
+        "sourceId": "session_export"
+      },
+      {
+        "id": "calibration",
+        "title": "Predicted and Observed Conversion by Risk Band",
+        "dataset": "calibration_tidy",
+        "type": "line",
+        "encodings": {
+          "x": {
+            "field": "risk_band",
+            "type": "categorical"
+          },
+          "y": {
+            "field": "rate",
+            "type": "quantitative"
+          },
+          "color": {
+            "field": "series",
+            "type": "categorical"
+          }
+        },
+        "options": {
+          "points": "always"
+        },
+        "sourceId": "session_export"
+      }
+    ],
+    "tables": [
+      {
+        "id": "model_controls",
+        "title": "Model Validation Controls",
+        "dataset": "model_controls",
+        "sourceId": "session_export",
+        "columns": [
+          {
+            "field": "control",
+            "label": "Control",
+            "type": "text"
+          },
+          {
+            "field": "implementation",
+            "label": "Implementation",
+            "type": "text"
+          },
+          {
+            "field": "status",
+            "label": "Status",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "control",
+          "direction": "asc"
+        }
+      }
+    ],
+    "blocks": [
+      {
+        "id": "intro",
+        "type": "markdown",
+        "body": "# GA4 E-commerce Funnel & Purchase Propensity Dashboard\nSource-backed funnel metrics and real machine-learning validation on future sessions."
+      },
+      {
+        "id": "business_kpis",
+        "type": "metric-strip",
+        "cardIds": [
+          "sessions",
+          "conversion",
+          "revenue"
+        ]
+      },
+      {
+        "id": "funnel_chart",
+        "type": "chart",
+        "chartId": "funnel_volume"
+      },
+      {
+        "id": "transition_chart",
+        "type": "chart",
+        "chartId": "stage_conversion"
+      },
+      {
+        "id": "model_section",
+        "type": "markdown",
+        "body": "## Machine-learning validation\nThe selected model uses only information available at session start and excludes all full-session behavior."
+      },
+      {
+        "id": "model_kpis",
+        "type": "metric-strip",
+        "cardIds": [
+          "pr_auc",
+          "roc_auc",
+          "lift",
+          "recall"
+        ]
+      },
+      {
+        "id": "model_chart",
+        "type": "chart",
+        "chartId": "model_comparison"
+      },
+      {
+        "id": "lift_chart",
+        "type": "chart",
+        "chartId": "lift_deciles"
+      },
+      {
+        "id": "calibration_chart",
+        "type": "chart",
+        "chartId": "calibration"
+      },
+      {
+        "id": "controls_table",
+        "type": "table",
+        "tableId": "model_controls"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "status": "ready",
+    "generatedAt": "2026-07-29",
+    "datasets": {
+      "kpis": [
+        {
+          "sessions": 310014,
+          "conversion_rate": 0.013699381318263046,
+          "revenue": 315948,
+          "revenue_per_session": 1.0191410710484043
+        }
+      ],
+      "model_kpis": [
+        {
+          "pr_auc": 0.017082207879042723,
+          "roc_auc": 0.5867846385951855,
+          "top_decile_lift": 2.0065051127450664,
+          "top_10_recall": 0.20065789473684212
+        }
+      ],
+      "funnel": [
+        {
+          "stage": "Visit",
+          "sessions": 310014
+        },
+        {
+          "stage": "Product View",
+          "sessions": 65393
+        },
+        {
+          "stage": "Add to Cart",
+          "sessions": 15187
+        },
+        {
+          "stage": "Begin Checkout",
+          "sessions": 9086
+        },
+        {
+          "stage": "Payment Info",
+          "sessions": 5875
+        },
+        {
+          "stage": "Purchase",
+          "sessions": 4247
+        }
+      ],
+      "funnel_transitions": [
+        {
+          "transition": "Visit → Product View",
+          "conversion_rate": 0.2109
+        },
+        {
+          "transition": "Product View → Add to Cart",
+          "conversion_rate": 0.2322
+        },
+        {
+          "transition": "Add to Cart → Begin Checkout",
+          "conversion_rate": 0.5983
+        },
+        {
+          "transition": "Begin Checkout → Payment",
+          "conversion_rate": 0.6466
+        },
+        {
+          "transition": "Payment → Purchase",
+          "conversion_rate": 0.7229
+        }
+      ],
+      "model_comparison": [
+        {
+          "model": "Hashed logistic",
+          "metric": "PR-AUC",
+          "value": 0.017082207879042723
+        },
+        {
+          "model": "Hashed logistic",
+          "metric": "ROC-AUC",
+          "value": 0.5867846385951855
+        },
+        {
+          "model": "Categorical Naive Bayes",
+          "metric": "PR-AUC",
+          "value": 0.0168219715367368
+        },
+        {
+          "model": "Categorical Naive Bayes",
+          "metric": "ROC-AUC",
+          "value": 0.5947443025709159
+        }
+      ],
+      "lift_deciles": [
+        {
+          "decile": "1",
+          "lift": 2.0065051127450664,
+          "sessions": 8153,
+          "purchases": 183
+        },
+        {
+          "decile": "2",
+          "lift": 1.118379898907086,
+          "sessions": 8153,
+          "purchases": 102
+        },
+        {
+          "decile": "3",
+          "lift": 0.9429477579020532,
+          "sessions": 8153,
+          "purchases": 86
+        },
+        {
+          "decile": "4",
+          "lift": 1.0636878206618114,
+          "sessions": 8152,
+          "purchases": 97
+        },
+        {
+          "decile": "5",
+          "lift": 0.9210187402764238,
+          "sessions": 8153,
+          "purchases": 84
+        },
+        {
+          "decile": "6",
+          "lift": 0.9758412843404968,
+          "sessions": 8153,
+          "purchases": 89
+        },
+        {
+          "decile": "7",
+          "lift": 0.8114731827729283,
+          "sessions": 8152,
+          "purchases": 74
+        },
+        {
+          "decile": "8",
+          "lift": 0.8113736521482783,
+          "sessions": 8153,
+          "purchases": 74
+        },
+        {
+          "decile": "9",
+          "lift": 0.789444634522649,
+          "sessions": 8153,
+          "purchases": 72
+        },
+        {
+          "decile": "10",
+          "lift": 0.5592585448840453,
+          "sessions": 8152,
+          "purchases": 51
+        }
+      ],
+      "calibration_tidy": [
+        {
+          "risk_band": "1",
+          "series": "Predicted",
+          "rate": 0.0070783594404853
+        },
+        {
+          "risk_band": "1",
+          "series": "Observed",
+          "rate": 0.0062553661228995
+        },
+        {
+          "risk_band": "2",
+          "series": "Predicted",
+          "rate": 0.0088471644861651
+        },
+        {
+          "risk_band": "2",
+          "series": "Observed",
+          "rate": 0.0088311051146817
+        },
+        {
+          "risk_band": "3",
+          "series": "Predicted",
+          "rate": 0.0097838966517104
+        },
+        {
+          "risk_band": "3",
+          "series": "Observed",
+          "rate": 0.0090764135900895
+        },
+        {
+          "risk_band": "4",
+          "series": "Predicted",
+          "rate": 0.0106665917247234
+        },
+        {
+          "risk_band": "4",
+          "series": "Observed",
+          "rate": 0.0090775269872423
+        },
+        {
+          "risk_band": "5",
+          "series": "Predicted",
+          "rate": 0.0115676409480339
+        },
+        {
+          "risk_band": "5",
+          "series": "Observed",
+          "rate": 0.0105482644425364
+        },
+        {
+          "risk_band": "6",
+          "series": "Predicted",
+          "rate": 0.0123683074201251
+        },
+        {
+          "risk_band": "6",
+          "series": "Observed",
+          "rate": 0.0106709186802404
+        },
+        {
+          "risk_band": "7",
+          "series": "Predicted",
+          "rate": 0.0132166759518749
+        },
+        {
+          "risk_band": "7",
+          "series": "Observed",
+          "rate": 0.0118989205103042
+        },
+        {
+          "risk_band": "8",
+          "series": "Predicted",
+          "rate": 0.0142722234848808
+        },
+        {
+          "risk_band": "8",
+          "series": "Observed",
+          "rate": 0.0105482644425364
+        },
+        {
+          "risk_band": "9",
+          "series": "Predicted",
+          "rate": 0.0167293226745816
+        },
+        {
+          "risk_band": "9",
+          "series": "Observed",
+          "rate": 0.012510732245799
+        },
+        {
+          "risk_band": "10",
+          "series": "Predicted",
+          "rate": 0.027471567152456
+        },
+        {
+          "risk_band": "10",
+          "series": "Observed",
+          "rate": 0.0224484789008832
+        }
+      ],
+      "model_controls": [
+        {
+          "control": "Chronological split",
+          "implementation": "Train through Jan 10; test Jan 11–31",
+          "status": "Passed"
+        },
+        {
+          "control": "Leakage audit",
+          "implementation": "Full-session behavior and outcomes excluded",
+          "status": "Passed"
+        },
+        {
+          "control": "Primary metric",
+          "implementation": "PR-AUC on 81,527 future sessions",
+          "status": "0.0171"
+        },
+        {
+          "control": "Capacity metric",
+          "implementation": "Recall and lift at highest-score 10%",
+          "status": "20.1% / 2.01×"
+        },
+        {
+          "control": "Deployment gate",
+          "implementation": "Requires prospective controlled experiment",
+          "status": "Experiment only"
+        }
+      ]
+    }
+  }
+}
