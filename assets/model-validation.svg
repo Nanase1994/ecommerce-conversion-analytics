@@ -1,53 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="470" viewBox="0 0 1100 470">
-  <rect width="1100" height="470" fill="#ffffff"/>
-  <style>
-    .title{font:700 28px Arial;fill:#17212b}.sub{font:16px Arial;fill:#5b6573}
-    .head{font:700 18px Arial;fill:#17212b}.label{font:15px Arial;fill:#17212b}
-    .small{font:13px Arial;fill:#5b6573}.value{font:700 14px Arial;fill:#17212b}
-  </style>
-  <text x="40" y="42" class="title">Chronological Holdout: Machine-Learning Results</text>
-  <text x="40" y="70" class="sub">81,527 future sessions • 912 purchases • Jan 11–31, 2021</text>
-
-  <text x="45" y="120" class="head">Model discrimination</text>
-  <text x="45" y="158" class="label">Logistic PR-AUC</text>
-  <rect x="180" y="142" width="15" height="22" fill="#2e74b5"/>
-  <text x="205" y="159" class="value">0.0171</text>
-  <text x="45" y="195" class="label">Naive Bayes PR-AUC</text>
-  <rect x="180" y="179" width="15" height="22" fill="#b4872b"/>
-  <text x="205" y="196" class="value">0.0168</text>
-  <text x="45" y="245" class="label">Logistic ROC-AUC</text>
-  <rect x="180" y="229" width="265" height="22" fill="#2e74b5"/>
-  <text x="455" y="246" class="value">0.5868</text>
-  <text x="45" y="282" class="label">Naive Bayes ROC-AUC</text>
-  <rect x="180" y="266" width="269" height="22" fill="#b4872b"/>
-  <text x="459" y="283" class="value">0.5947</text>
-
-  <text x="550" y="120" class="head">Lift by logistic score decile</text>
-  <line x1="560" y1="355" x2="1035" y2="355" stroke="#aab6c2"/>
-  <line x1="560" y1="245" x2="1035" y2="245" stroke="#d9e1e8"/>
-  <text x="530" y="250" class="small">1×</text>
-  <rect x="575" y="134" width="34" height="221" fill="#b4872b"/>
-  <rect x="622" y="232" width="34" height="123" fill="#2e74b5"/>
-  <rect x="669" y="251" width="34" height="104" fill="#2e74b5"/>
-  <rect x="716" y="238" width="34" height="117" fill="#2e74b5"/>
-  <rect x="763" y="254" width="34" height="101" fill="#2e74b5"/>
-  <rect x="810" y="248" width="34" height="107" fill="#2e74b5"/>
-  <rect x="857" y="266" width="34" height="89" fill="#2e74b5"/>
-  <rect x="904" y="266" width="34" height="89" fill="#2e74b5"/>
-  <rect x="951" y="268" width="34" height="87" fill="#2e74b5"/>
-  <rect x="998" y="294" width="34" height="61" fill="#2e74b5"/>
-  <text x="592" y="125" text-anchor="middle" class="value">2.01×</text>
-  <text x="592" y="380" text-anchor="middle" class="small">1</text>
-  <text x="639" y="380" text-anchor="middle" class="small">2</text>
-  <text x="686" y="380" text-anchor="middle" class="small">3</text>
-  <text x="733" y="380" text-anchor="middle" class="small">4</text>
-  <text x="780" y="380" text-anchor="middle" class="small">5</text>
-  <text x="827" y="380" text-anchor="middle" class="small">6</text>
-  <text x="874" y="380" text-anchor="middle" class="small">7</text>
-  <text x="921" y="380" text-anchor="middle" class="small">8</text>
-  <text x="968" y="380" text-anchor="middle" class="small">9</text>
-  <text x="1015" y="380" text-anchor="middle" class="small">10</text>
-  <text x="795" y="410" text-anchor="middle" class="small">1 = highest predicted purchase propensity</text>
-  <rect x="40" y="425" width="1020" height="1" fill="#d9e1e8"/>
-  <text x="40" y="452" class="label">Top 10% of scores captures 20.1% of purchases at 2.01× lift.</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="700" viewBox="0 0 1400 700">
+<rect width="1400" height="700" fill="#fff"/><style>.title{font:700 34px Arial;fill:#17212b}.sub{font:19px Arial;fill:#5b6573}.head{font:700 22px Arial;fill:#17212b}.label{font:17px Arial;fill:#17212b}.small{font:15px Arial;fill:#5b6573}.value{font:700 16px Arial;fill:#17212b}</style>
+<text x="70" y="72" class="title">Chronological Holdout: Machine-Learning Results</text><text x="70" y="112" class="sub">81,527 future sessions | 912 purchases | January 11-31, 2021</text>
+<text x="75" y="185" class="head">Model discrimination</text><text x="75" y="245" class="label">Logistic PR-AUC</text><rect x="300" y="222" width="14" height="30" rx="3" fill="#2e74b5"/><text x="329" y="245" class="value">0.0171</text><text x="75" y="310" class="label">Naive Bayes PR-AUC</text><rect x="300" y="287" width="14" height="30" rx="3" fill="#b4872b"/><text x="329" y="310" class="value">0.0168</text><text x="75" y="410" class="label">Logistic ROC-AUC</text><rect x="300" y="387" width="321" height="30" rx="3" fill="#2e74b5"/><text x="636" y="410" class="value">0.5868</text><text x="75" y="475" class="label">Naive Bayes ROC-AUC</text><rect x="300" y="452" width="325" height="30" rx="3" fill="#b4872b"/><text x="640" y="475" class="value">0.5947</text>
+<text x="780" y="185" class="head">Lift by logistic score decile</text><text x="780" y="217" class="small">Decile 1 contains the highest predicted propensity</text><line x1="790" y1="535" x2="1330" y2="535" stroke="#aab6c2" stroke-width="2"/><line x1="790" y1="390" x2="1330" y2="390" stroke="#d9e1e8" stroke-width="2"/><text x="738" y="396" class="small">1.0x</text>
+<rect x="815" y="243" width="39" height="292" rx="3" fill="#b4872b"/><rect x="868" y="374" width="39" height="161" rx="3" fill="#2e74b5"/><rect x="921" y="398" width="39" height="137" rx="3" fill="#2e74b5"/><rect x="974" y="381" width="39" height="154" rx="3" fill="#2e74b5"/><rect x="1027" y="403" width="39" height="132" rx="3" fill="#2e74b5"/><rect x="1080" y="394" width="39" height="141" rx="3" fill="#2e74b5"/><rect x="1133" y="419" width="39" height="116" rx="3" fill="#2e74b5"/><rect x="1186" y="419" width="39" height="116" rx="3" fill="#2e74b5"/><rect x="1239" y="422" width="39" height="113" rx="3" fill="#2e74b5"/><rect x="1292" y="454" width="39" height="81" rx="3" fill="#2e74b5"/><text x="834" y="228" text-anchor="middle" class="value">2.01x</text>
+<g class="small" text-anchor="middle"><text x="834" y="565">1</text><text x="887" y="565">2</text><text x="940" y="565">3</text><text x="993" y="565">4</text><text x="1046" y="565">5</text><text x="1099" y="565">6</text><text x="1152" y="565">7</text><text x="1205" y="565">8</text><text x="1258" y="565">9</text><text x="1311" y="565">10</text></g>
+<line x1="70" y1="620" x2="1330" y2="620" stroke="#d9e1e8" stroke-width="2"/><text x="70" y="660" class="label">Top 10% of scores captures 20.1% of purchases at 2.01x lift.</text></svg>
