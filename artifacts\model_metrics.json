@@ -1,0 +1,104 @@
+{
+  "data": {
+    "rows": 310014,
+    "train_rows": 228487,
+    "test_rows": 81527,
+    "train_purchases": 3335,
+    "test_purchases": 912,
+    "train_conversion_rate": 0.014596016403559064,
+    "test_conversion_rate": 0.011186478099279994
+  },
+  "split": {
+    "train_start": "2020-11-16",
+    "train_end": "2021-01-10",
+    "test_start": "2021-01-11",
+    "test_end": "2021-01-31"
+  },
+  "feature_contract": {
+    "safe_features": [
+      "day_of_week",
+      "is_weekend",
+      "traffic_source",
+      "traffic_medium",
+      "device_category",
+      "operating_system",
+      "country"
+    ],
+    "prohibited_columns_present_but_excluded": [
+      "add_to_cart_events",
+      "added_payment_info",
+      "added_shipping_info",
+      "added_to_cart",
+      "began_checkout",
+      "checkout_events",
+      "distinct_event_types",
+      "engagement_time_seconds",
+      "ga_session_id",
+      "page_views",
+      "payment_events",
+      "product_views",
+      "purchase_events",
+      "revenue",
+      "session_duration_seconds",
+      "shipping_events",
+      "total_events",
+      "transaction_count",
+      "user_pseudo_id",
+      "viewed_product"
+    ],
+    "status": "passed"
+  },
+  "models": {
+    "hashed_logistic_regression": {
+      "pr_auc": 0.017082207879042723,
+      "roc_auc": 0.5867846385951855,
+      "log_loss": 0.06089007432913411,
+      "brier_score": 0.011049860985141031,
+      "recall_at_top_10pct": 0.20065789473684212,
+      "conversion_rate_top_10pct": 0.022445725499816018,
+      "lift_top_10pct": 2.0065051127450664
+    },
+    "categorical_naive_bayes": {
+      "pr_auc": 0.0168219715367368,
+      "roc_auc": 0.5947443025709159,
+      "log_loss": 0.06306321071962631,
+      "brier_score": 0.011379725604306844,
+      "recall_at_top_10pct": 0.20285087719298245,
+      "conversion_rate_top_10pct": 0.022691033975223845,
+      "lift_top_10pct": 2.0284341303706954
+    }
+  },
+  "selected_by_pr_auc": "hashed_logistic_regression",
+  "training_loss": [
+    0.07507856836330355,
+    0.07525634082588412,
+    0.07511302652286594,
+    0.07515419166479143,
+    0.07502146765700045,
+    0.07544466401528753,
+    0.07520074313331838,
+    0.07510780836059228,
+    0.07504284393279627,
+    0.07502367518119271,
+    0.07507323362187115,
+    0.0750076265731018,
+    0.07508061948086286,
+    0.0750108644520857,
+    0.07539988564957911,
+    0.07521237443847449,
+    0.07531146882619259,
+    0.07507931277399787,
+    0.07519680121985613,
+    0.07502013046048545,
+    0.0750274633413432,
+    0.07510026309057433,
+    0.07503202032344239,
+    0.07532332458854761,
+    0.07507478279794756,
+    0.0750851365714372,
+    0.0753461040908133,
+    0.07512249913242897,
+    0.07502271648138281,
+    0.07510168873613686
+  ]
+}

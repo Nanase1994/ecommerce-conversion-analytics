@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="430" viewBox="0 0 1000 430">
+  <rect width="1000" height="430" fill="#ffffff"/>
+  <style>
+    .title{font:700 28px Arial;fill:#17212b}.sub{font:16px Arial;fill:#5b6573}
+    .label{font:600 15px Arial;fill:#17212b}.value{font:700 14px Arial;fill:#17212b}
+  </style>
+  <text x="40" y="45" class="title">GA4 E-commerce Conversion Funnel</text>
+  <text x="40" y="73" class="sub">Session volume by observed stage, Nov 16, 2020–Jan 31, 2021</text>
+  <text x="40" y="124" class="label">Visit</text>
+  <rect x="190" y="103" width="720" height="28" rx="4" fill="#2e74b5"/>
+  <text x="922" y="123" class="value">310,014</text>
+  <text x="40" y="176" class="label">Product view</text>
+  <rect x="190" y="155" width="152" height="28" rx="4" fill="#2e74b5"/>
+  <text x="354" y="175" class="value">65,393</text>
+  <text x="40" y="228" class="label">Add to cart</text>
+  <rect x="190" y="207" width="35" height="28" rx="4" fill="#2e74b5"/>
+  <text x="237" y="227" class="value">15,187</text>
+  <text x="40" y="280" class="label">Begin checkout</text>
+  <rect x="190" y="259" width="21" height="28" rx="4" fill="#b4872b"/>
+  <text x="223" y="279" class="value">9,086</text>
+  <text x="40" y="332" class="label">Payment info</text>
+  <rect x="190" y="311" width="14" height="28" rx="4" fill="#b4872b"/>
+  <text x="216" y="331" class="value">5,875</text>
+  <text x="40" y="384" class="label">Purchase</text>
+  <rect x="190" y="363" width="10" height="28" rx="4" fill="#b4872b"/>
+  <text x="212" y="383" class="value">4,247</text>
+  <text x="650" y="405" class="sub">Largest loss: Visit → Product View (244,621 sessions)</text>
+</svg>
