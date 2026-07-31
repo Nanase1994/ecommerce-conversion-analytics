@@ -1,5 +1,9 @@
--- Leakage-safe five-minute feature table. Replace YOUR_PROJECT_ID.
-CREATE OR REPLACE TABLE `YOUR_PROJECT_ID.ecommerce_analytics.session_purchase_features` AS
+-- OPTIONAL EXTENSION
+-- This file is not used to reproduce the results reported in the research
+-- paper. It uses behavior observed during the first five minutes of a
+-- session. Replace YOUR_PROJECT_ID with your Google Cloud project ID.
+
+CREATE OR REPLACE TABLE `YOUR_PROJECT_ID.ecommerce_analytics.five_minute_purchase_features` AS
 WITH events AS (
   SELECT
     user_pseudo_id,
@@ -55,6 +59,6 @@ GROUP BY session_id,l.converted;
 -- Leakage audit: the output schema must not contain post-outcome fields.
 SELECT column_name
 FROM `YOUR_PROJECT_ID.ecommerce_analytics.INFORMATION_SCHEMA.COLUMNS`
-WHERE table_name='session_purchase_features'
+WHERE table_name='five_minute_purchase_features'
   AND REGEXP_CONTAINS(LOWER(column_name),r'purchase|revenue|transaction|payment|checkout|duration|total_events');
 

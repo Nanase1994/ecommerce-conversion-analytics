@@ -10,14 +10,14 @@
       {
         "id": "session_export",
         "label": "GA4 session-level e-commerce export",
-        "path": "data/session_level_ecommerce.csv",
+        "path": "data/session_level_ecommerce.csv.gz",
         "query": {
           "engine": "Python",
           "language": "Python",
           "description": "Session-level funnel metrics and chronological purchase-propensity validation.",
-          "sql": "SELECT COUNT(*) AS sessions, AVG(converted) AS conversion_rate, SUM(revenue) AS revenue FROM read_csv_auto('session_level_ecommerce.csv');",
+          "sql": "SELECT COUNT(*) AS sessions, AVG(converted) AS conversion_rate, SUM(revenue) AS revenue FROM read_csv_auto('session_level_ecommerce.csv.gz');",
           "tables_used": [
-            "session_level_ecommerce.csv"
+            "session_level_ecommerce.csv.gz"
           ],
           "filters": [
             "Analysis window 2020-11-16 through 2021-01-31",
@@ -395,12 +395,12 @@
       ],
       "model_comparison": [
         {
-          "model": "Hashed logistic",
+          "model": "Hashed logistic regression",
           "metric": "PR-AUC",
           "value": 0.017082207879042723
         },
         {
-          "model": "Hashed logistic",
+          "model": "Hashed logistic regression",
           "metric": "ROC-AUC",
           "value": 0.5867846385951855
         },

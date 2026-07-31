@@ -1,4 +1,4 @@
-# E-commerce Conversion Analytics & Purchase Propensity ML
+﻿# E-commerce Conversion Analytics & Purchase Propensity ML
 
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![BigQuery](https://img.shields.io/badge/Google_BigQuery-SQL-4285F4?logo=googlebigquery&logoColor=white)](https://cloud.google.com/bigquery)
@@ -31,22 +31,23 @@ proof that any particular treatment causes a purchase.
 
 ## Research questions
 
-1. At which stage does the conversion funnel lose the largest number and
-   proportion of sessions?
-2. How do conversion outcomes vary across acquisition, device, geography, and
-   calendar segments?
-3. Can session-start attributes rank future purchase propensity without using
-   post-session or outcome-derived information?
-4. How much purchase concentration can the model capture within a realistic
-   top-10% targeting capacity?
-5. Which product experiment should be prioritized, and which business and
-   customer-experience guardrails should determine whether it scales?
+1. At which funnel stage does the largest customer drop-off occur?
+2. Should the company first improve product discovery, product pages, or
+   checkout?
+3. Can information available at the start of a session rank future purchase
+   propensity for controlled experimentation?
 
 ## Run the project
 
 **Start here:** [Ecommerce_Conversion_Analytics_Integrated.ipynb](Ecommerce_Conversion_Analytics_Integrated.ipynb)
 
-The integrated notebook reads the external
+The integrated notebook is the canonical implementation of the analysis
+reported in the research paper. It reproduces the source-scale checks, complete
+six-stage funnel, chronological split, hashed logistic regression, categorical
+Naive Bayes comparison, calibration analysis, top-decile lift, executive
+dashboard, and automated reconciliation checks.
+
+It reads the external
 [`data/session_level_ecommerce.csv.gz`](data/session_level_ecommerce.csv.gz)
 file. The file contains standard CSV content with gzip compression, and pandas
 reads it directly without a manual extraction step.
@@ -54,11 +55,22 @@ Open the repository in Jupyter or Google Colab and choose **Run All**. Every
 table, metric, model result, and chart is generated inside the notebook and
 retained as a visible output.
 
+The main SQL workflow is limited to:
+
+1. reconstructing one row per GA4 session, including all six funnel stages; and
+2. creating the seven-variable leakage-safe session-start feature table.
+
+The Python notebooks train the models reported in the paper. The
+[`experiments/`](experiments/) directory contains a separate first-five-minute
+behavioral BigQuery ML extension. Its features, prediction timing, and model
+classes differ from the primary paper and should not be interpreted as a
+direct reproduction of the reported results.
+
 > **Portfolio highlight:** The highest-scored 10% of future sessions contains
 > 20.1% of purchases, producing **2.01x lift** without using browsing,
 > checkout, revenue, or other post-session information.
 
-![Model validation](assets/model-validation.svg)
+![Model validation](assets/model-validation.png)
 
 ## Business results
 
@@ -91,10 +103,12 @@ The evaluation uses a chronological split to approximate deployment:
 | **Hashed logistic regression** | **0.0171** | 0.5868 | **0.0609** | **0.01105** | 20.1% | 2.01x |
 | Categorical Naive Bayes | 0.0168 | **0.5947** | 0.0631 | 0.01138 | **20.3%** | **2.03x** |
 
-Logistic regression is selected using PR-AUC, the primary rare-event metric,
-and provides better probability quality. Performance is intentionally
-described as modest: session-start context offers useful ranking signal but is
-not sufficient for autonomous customer treatment.
+Hashed logistic regression is selected using PR-AUC, the primary rare-event
+metric, and provides better probability quality. Its seven categorical
+session-start variables are encoded through deterministic feature hashing into
+2,048 buckets. Performance is intentionally described as modest:
+session-start context offers useful ranking signal but is not sufficient for
+autonomous customer treatment.
 
 ## Leakage-safe design
 
@@ -108,15 +122,17 @@ duration.
 
 ```text
 .
-|-- Ecommerce_Conversion_Analytics_Integrated.ipynb  # Executed end-to-end analysis
-|-- data/session_level_ecommerce.csv.gz              # External compressed CSV dataset
-|-- src/train_model.ipynb                            # Executed model-training workflow
-|-- tests/validate_project.ipynb                     # Executed validation checks
+|-- Ecommerce_Conversion_Analytics_Integrated.ipynb # Canonical paper analysis
+|-- data/session_level_ecommerce.csv.gz             # Session-level analysis data
+|-- sql/01_build_session_table.sql                   # GA4 event-to-session reconstruction
+|-- sql/02_build_session_start_features.sql          # Seven leakage-safe model features
+|-- src/train_model.ipynb                            # Paper model training workflow
+|-- experiments/                                     # Optional five-minute BQML extension
+|-- tests/validate_project.ipynb                     # Reproducibility checks
 |-- artifacts/                                       # Reviewed model outputs
-|-- assets/                                          # Figures generated by the notebooks
-|-- dashboard/                                       # Dashboard source and definitions
-|-- docs/                                            # Model card and data dictionary
-`-- sql/                                             # BigQuery reconstruction and scoring
+|-- assets/                                          # Notebook-generated figures
+|-- dashboard/                                       # Dashboard definition
+`-- docs/                                            # Model card and data dictionary
 ```
 
 ## Limitations
@@ -171,15 +187,20 @@ identifies which customer journey should be improved.
 
 ## Skills demonstrated
 
-`Python` | `NumPy` | `pandas` | `Matplotlib` | `Jupyter` | `BigQuery SQL` |
-`BigQuery ML` | `GA4` | `feature engineering` | `classification` |
-`rare-event metrics` | `chronological validation` | `data leakage prevention` |
-`calibration` | `dashboard design` | `product experimentation`
+### Core workflow
+
+`Python` | `pandas` | `NumPy` | `Matplotlib` | `Jupyter` | `BigQuery SQL` |
+`GA4` | `feature engineering` | `classification` | `rare-event metrics` |
+`chronological validation` | `data leakage prevention` | `calibration` |
+`dashboard design` | `experiment design`
+
+### Optional extension
+
+`BigQuery ML` | `boosted trees` | `five-minute behavioral features`
 
 ## License
 
 MIT License. The underlying GA4 public sample remains subject to its source
 terms.
-
 
 
