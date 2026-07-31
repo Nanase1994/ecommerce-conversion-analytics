@@ -1,10 +1,12 @@
--- Score chronological holdout and create lift/calibration monitoring tables. Replace YOUR_PROJECT_ID.
+-- OPTIONAL EXTENSION
+-- Scores the first-five-minute BigQuery ML challenger. This is not the
+-- canonical paper model. Replace YOUR_PROJECT_ID.
 CREATE OR REPLACE TABLE `YOUR_PROJECT_ID.ecommerce_analytics.purchase_test_scores` AS
 SELECT
   session_id,session_date,converted,
   predicted_converted_probs[OFFSET(1)].prob predicted_probability
 FROM ML.PREDICT(MODEL `YOUR_PROJECT_ID.ecommerce_analytics.purchase_boosted_tree`,
-  (SELECT * FROM `YOUR_PROJECT_ID.ecommerce_analytics.session_purchase_features`
+  (SELECT * FROM `YOUR_PROJECT_ID.ecommerce_analytics.five_minute_purchase_features`
    WHERE session_date BETWEEN '2021-01-11' AND '2021-01-31'));
 
 -- Lift by score decile.

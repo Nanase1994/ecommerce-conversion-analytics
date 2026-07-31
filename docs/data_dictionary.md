@@ -19,5 +19,9 @@
 | `total_events`, `distinct_event_types` | Descriptive | Full-session event totals | No—future information |
 | `session_duration_seconds`, `engagement_time_seconds` | Descriptive | Full-session duration and engagement | No—future information |
 
-The leakage audit in `src/train_model.py` enforces the seven-feature score-time
-contract before model training.
+The leakage audit in `src/train_model.ipynb` enforces the seven-feature
+score-time contract before model training.
+
+The tables and models under `experiments/` use a different first-five-minute
+feature contract and are not part of the primary research-paper model.
+

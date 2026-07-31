@@ -31,6 +31,14 @@ totals, engagement, and session duration are excluded. Although they exist in
 the session-level export, they contain future behavior or directly reveal the
 outcome.
 
+## Canonical implementation
+
+The reported model is implemented in
+`Ecommerce_Conversion_Analytics_Integrated.ipynb` and
+`src/train_model.ipynb`. The BigQuery ML files under `experiments/` represent a
+separate first-five-minute behavioral extension and are not used to produce the
+metrics reported in this model card.
+
 ## Training and evaluation
 
 - Training: 2020-11-16 through 2021-01-10.
@@ -65,3 +73,4 @@ Track input coverage, unseen-category rates, score distribution, conversion by
 decile, PR-AUC, Brier score, and calibration. Deployment remains limited to a
 controlled experiment until prospective stability, privacy review, and
 incremental treatment value are demonstrated.
+
